@@ -1,0 +1,34 @@
+load_recipe:
+  fields:
+    recipe_id:
+      example: "1140221220253617"
+      selector:
+        text:
+    url:
+      example: "https://www.chefkoch.de/rezepte/1140221220253617/Supersaftiger-Apfelkuchen.html"
+      selector:
+        text:
+    query:
+      example: "Apfelkuchen"
+      selector:
+        text:
+search:
+  fields:
+    query:
+      required: true
+      example: "Carbonara"
+      selector:
+        text:
+    limit:
+      default: 10
+      selector:
+        number:
+          min: 1
+          max: 50
+add_ingredients_to_list:
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity:
+          domain: todo

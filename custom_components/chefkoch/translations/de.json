@@ -1,0 +1,108 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Chefkoch",
+        "description": "Token aus einer angemeldeten Browser-Sitzung: chefkoch.de → F12 → Netzwerk → Kochbuch öffnen → Anfrage an api.chefkoch.de → Request-Header „x-chefkoch-api-token“.",
+        "data": {
+          "token": "x-chefkoch-api-token"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Chefkoch neu anmelden",
+        "description": "Das Token ist abgelaufen. Bei chefkoch.de anmelden und das neue Token aus dem Header „x-chefkoch-api-token“ einfügen.",
+        "data": {
+          "token": "x-chefkoch-api-token"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Token ungültig oder abgelaufen",
+      "cannot_connect": "Chefkoch nicht erreichbar",
+      "wrong_account": "Token gehört zu einem anderen Konto"
+    },
+    "abort": {
+      "already_configured": "Dieses Konto ist bereits eingerichtet",
+      "reauth_successful": "Neu angemeldet"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "kochbuch": {
+        "name": "Kochbuch"
+      },
+      "rezept": {
+        "name": "Rezept"
+      },
+      "kochschritt": {
+        "name": "Kochschritt"
+      }
+    },
+    "select": {
+      "kochbuch_auswahl": {
+        "name": "Rezept auswählen"
+      }
+    },
+    "button": {
+      "weiter": {
+        "name": "Weiter"
+      },
+      "zurueck": {
+        "name": "Zurück"
+      },
+      "von_vorn": {
+        "name": "Zu den Zutaten"
+      },
+      "beenden": {
+        "name": "Kochen beenden"
+      },
+      "kochbuch_aktualisieren": {
+        "name": "Kochbuch aktualisieren"
+      }
+    }
+  },
+  "services": {
+    "load_recipe": {
+      "name": "Rezept laden",
+      "description": "Lädt ein Rezept für den Kochmodus: per ID, Chefkoch-Link oder Suchbegriff (erst im eigenen Kochbuch, dann auf Chefkoch).",
+      "fields": {
+        "recipe_id": {
+          "name": "Rezept-ID",
+          "description": "Chefkoch-Rezept-ID"
+        },
+        "url": {
+          "name": "Link",
+          "description": "Link zu einem Chefkoch-Rezept"
+        },
+        "query": {
+          "name": "Suchbegriff",
+          "description": "Titel oder Teil davon"
+        }
+      }
+    },
+    "search": {
+      "name": "Rezepte suchen",
+      "description": "Sucht auf Chefkoch und markiert Treffer aus dem eigenen Kochbuch.",
+      "fields": {
+        "query": {
+          "name": "Suchbegriff",
+          "description": "Wonach gesucht wird"
+        },
+        "limit": {
+          "name": "Anzahl",
+          "description": "Maximale Trefferzahl"
+        }
+      }
+    },
+    "add_ingredients_to_list": {
+      "name": "Zutaten auf Einkaufsliste",
+      "description": "Schreibt die Zutaten des geladenen Rezepts auf eine To-do-Liste.",
+      "fields": {
+        "entity_id": {
+          "name": "Liste",
+          "description": "To-do-Liste, z. B. die Einkaufsliste"
+        }
+      }
+    }
+  }
+}

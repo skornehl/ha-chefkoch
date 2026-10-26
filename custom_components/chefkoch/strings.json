@@ -1,0 +1,108 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Chefkoch",
+        "description": "Token from a logged-in browser session: chefkoch.de → F12 → Network → open your Kochbuch → request to api.chefkoch.de → request header “x-chefkoch-api-token”.",
+        "data": {
+          "token": "x-chefkoch-api-token"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate Chefkoch",
+        "description": "The token expired. Log in on chefkoch.de and paste the new “x-chefkoch-api-token”.",
+        "data": {
+          "token": "x-chefkoch-api-token"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Token invalid or expired",
+      "cannot_connect": "Cannot reach Chefkoch",
+      "wrong_account": "Token belongs to a different account"
+    },
+    "abort": {
+      "already_configured": "Account already configured",
+      "reauth_successful": "Re-authentication successful"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "kochbuch": {
+        "name": "Cookbook"
+      },
+      "rezept": {
+        "name": "Recipe"
+      },
+      "kochschritt": {
+        "name": "Cooking step"
+      }
+    },
+    "select": {
+      "kochbuch_auswahl": {
+        "name": "Choose recipe"
+      }
+    },
+    "button": {
+      "weiter": {
+        "name": "Next"
+      },
+      "zurueck": {
+        "name": "Back"
+      },
+      "von_vorn": {
+        "name": "To ingredients"
+      },
+      "beenden": {
+        "name": "Stop cooking"
+      },
+      "kochbuch_aktualisieren": {
+        "name": "Refresh cookbook"
+      }
+    }
+  },
+  "services": {
+    "load_recipe": {
+      "name": "Load recipe",
+      "description": "Load a recipe for cooking mode by id, Chefkoch URL or search term (own cookbook first).",
+      "fields": {
+        "recipe_id": {
+          "name": "Rezept-ID",
+          "description": "Chefkoch recipe id"
+        },
+        "url": {
+          "name": "URL",
+          "description": "Link to a Chefkoch recipe"
+        },
+        "query": {
+          "name": "Search term",
+          "description": "Title or part of it"
+        }
+      }
+    },
+    "search": {
+      "name": "Search recipes",
+      "description": "Search Chefkoch, marking hits from your own cookbook.",
+      "fields": {
+        "query": {
+          "name": "Search term",
+          "description": "What to search for"
+        },
+        "limit": {
+          "name": "Limit",
+          "description": "Maximum number of results"
+        }
+      }
+    },
+    "add_ingredients_to_list": {
+      "name": "Add ingredients to list",
+      "description": "Add the loaded recipe's ingredients to a to-do list.",
+      "fields": {
+        "entity_id": {
+          "name": "List",
+          "description": "To-do list, e.g. the shopping list"
+        }
+      }
+    }
+  }
+}
