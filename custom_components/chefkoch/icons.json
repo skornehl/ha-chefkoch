@@ -1,0 +1,7 @@
+{
+  "services": {
+    "load_recipe": { "service": "mdi:chef-hat" },
+    "search": { "service": "mdi:magnify" },
+    "add_ingredients_to_list": { "service": "mdi:cart-plus" }
+  }
+}
