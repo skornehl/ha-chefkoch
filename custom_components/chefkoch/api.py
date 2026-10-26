@@ -23,8 +23,13 @@ HEADERS = {
     "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0 Safari/537.36",
 }
 RECIPE_ID_RE = re.compile(r"/rezepte/(\d+)")
-# "50 bis 55 Minuten", "20 Min.", "1 Stunde"
-MINUTES_RE = re.compile(r"(\d+)(?:\s*(?:-|bis)\s*(\d+))?\s*(Minuten|Min\.?|Stunden?|Std\.?)", re.IGNORECASE)
+# "50 bis 55 Minuten", "20 Min.", "1,5 Stunden", "1/2 Stunde", "½ Std.", "eine halbe Stunde"
+_NUM = r"(?:\d+\s+\d+/\d+|\d+/\d+|\d+(?:[.,]\d+)?|[½¼¾]|eine\s+halbe|einer\s+halben|anderthalb|eineinhalb)"
+MINUTES_RE = re.compile(
+    rf"({_NUM})(?:\s*(?:-|–|bis)\s*({_NUM}))?\s*(Minuten|Minute|Min\.?|Stunden|Stunde|Std\.?)(?![a-zäöü])",
+    re.IGNORECASE,
+)
+_WORDS = {"½": 0.5, "¼": 0.25, "¾": 0.75, "anderthalb": 1.5, "eineinhalb": 1.5}
 
 
 class ChefkochError(Exception):
@@ -78,14 +83,32 @@ def image_url(template: str | None, size: str = "crop-960x720") -> str | None:
     return template.replace("<format>", size) if template else None
 
 
+def _number(text: str) -> float:
+    text = re.sub(r"\s+", " ", text.strip().lower())
+    if text in _WORDS:
+        return _WORDS[text]
+    if "halbe" in text:
+        return 0.5
+    if "/" in text:
+        whole, _, frac = text.rpartition(" ")
+        num, den = frac.split("/")
+        return (float(whole) if whole else 0.0) + float(num) / float(den)
+    return float(text.replace(",", "."))
+
+
 def step_minutes(text: str) -> int | None:
     """Longest duration mentioned in a step, in minutes (for a timer)."""
     best = None
     for low, high, unit in MINUTES_RE.findall(text):
-        value = int(high or low)
+        try:
+            value = _number(high or low)
+        except (ValueError, ZeroDivisionError):
+            continue
         if unit.lower().startswith(("stund", "std")):
             value *= 60
-        best = max(best or 0, value)
+        minutes = round(value)
+        if minutes > 0:
+            best = max(best or 0, minutes)
     return best
 
 
@@ -104,11 +127,16 @@ def parse_recipe(data: dict[str, Any]) -> Recipe:
         if header:
             ingredients.append(f"— {header} —")
         for ing in group.get("ingredients") or []:
-            parts = [_format_amount(ing.get("amount")), ing.get("unit") or "", ing.get("name") or ""]
+            # Chefkoch puts qualifiers into the unit ("EL, gestr.") - read as "EL gestr."
+            unit = re.sub(r"\s*,\s*", " ", ing.get("unit") or "").strip()
+            parts = [_format_amount(ing.get("amount")), unit, (ing.get("name") or "").strip()]
             line = " ".join(p for p in parts if p).strip()
-            if ing.get("usageInfo"):
-                line += ing["usageInfo"] if ing["usageInfo"].startswith(",") else f" {ing['usageInfo']}"
-            ingredients.append(line)
+            usage = (ing.get("usageInfo") or "").strip()
+            if usage:
+                line += usage if usage.startswith(",") else f" {usage}"
+            line = line.strip(" ,")
+            if line:
+                ingredients.append(line)
     text = (data.get("instructions") or "").replace("\r", "")
     steps = [re.sub(r"\s+", " ", s).strip() for s in re.split(r"\n\s*\n", text)]
     steps = [s for s in steps if s]
@@ -194,6 +222,8 @@ class ChefkochClient:
         out = []
         for entry in data.get("results") or []:
             rec = entry.get("recipe") or {}
+            if not rec.get("id"):
+                continue
             out.append(
                 {
                     "id": str(rec.get("id")),

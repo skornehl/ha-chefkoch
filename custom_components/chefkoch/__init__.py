@@ -92,7 +92,7 @@ def _register_services(hass: HomeAssistant) -> None:
         if not recipe:
             raise ServiceValidationError("Kein Rezept geladen")
         for item in recipe.ingredients:
-            if item.startswith("—"):
+            if not item.strip() or item.startswith("—"):
                 continue
             await hass.services.async_call(
                 "todo", "add_item", {"item": item}, target={"entity_id": call.data[ATTR_ENTITY_ID]}, blocking=True
