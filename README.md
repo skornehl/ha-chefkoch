@@ -1,5 +1,11 @@
 # Chefkoch for Home Assistant
 
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5?style=for-the-badge&logo=homeassistantcommunitystore&logoColor=white)](https://hacs.xyz/docs/faq/custom_repositories/)
+[![Release](https://img.shields.io/github/v/release/skornehl/ha-chefkoch?style=for-the-badge&color=6366F1)](https://github.com/skornehl/ha-chefkoch/releases)
+[![Home Assistant 2026.1+](https://img.shields.io/badge/Home%20Assistant-2026.1%2B-18BCF2?style=for-the-badge&logo=homeassistant&logoColor=white)](https://www.home-assistant.io/)
+[![Checks](https://img.shields.io/github/actions/workflow/status/skornehl/ha-chefkoch/validate.yml?branch=main&style=for-the-badge&label=checks)](https://github.com/skornehl/ha-chefkoch/actions/workflows/validate.yml)
+[![License](https://img.shields.io/github/license/skornehl/ha-chefkoch?style=for-the-badge&color=9333EA)](LICENSE)
+
 Your saved [chefkoch.de](https://www.chefkoch.de) recipes (Kochbuch) in Home
 Assistant, plus a **cooking mode**: ingredients first, then one step at a
 time - made for a small kitchen touch screen.
